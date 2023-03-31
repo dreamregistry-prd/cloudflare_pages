@@ -19,7 +19,7 @@ variable "kv_namespaces" {
 variable "kv_namespace_prefix" {
   description = "prefix to use for cloudflare kv namespaces names"
   type        = string
-  default     = ""
+  default     = "app"
 }
 
 variable "cloudflare_account_id" {
@@ -30,7 +30,7 @@ variable "cloudflare_account_id" {
 variable "cloudflare_project_name_prefix" {
   description = "cloudflare project name prefix"
   type        = string
-  default     = ""
+  default     = "app"
 }
 
 variable "domain_name" {

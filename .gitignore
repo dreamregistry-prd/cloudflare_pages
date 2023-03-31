@@ -1,0 +1,7 @@
+.envrc
+.terraform
+terraform.tfstate*
+.terraform.*
+/.idea
+/.cloudflare_pages_functions.zip
+/.cloudflare_pages_public.zip

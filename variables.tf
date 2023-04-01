@@ -33,7 +33,12 @@ variable "cloudflare_project_name_prefix" {
   default     = "app"
 }
 
-variable "domain_name" {
+variable "domain_name_prefix" {
   description = "cloudflare custom domain name"
+  type        = string
+}
+
+variable "root_domain" {
+  description = "root domain name"
   type        = string
 }

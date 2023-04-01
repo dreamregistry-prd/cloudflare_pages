@@ -1,5 +1,5 @@
 output "app_url" {
-  value = "https://${var.domain_name}"
+  value = "https://${aws_route53_record.domain.name}"
 }
 
 output "cloudflare_project_domain" {

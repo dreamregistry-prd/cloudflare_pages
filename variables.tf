@@ -42,3 +42,8 @@ variable "root_domain" {
   description = "root domain name"
   type        = string
 }
+
+variable "build_folder" {
+  description = "folder where the build artifacts are stored"
+  default = "build"
+}

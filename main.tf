@@ -98,7 +98,7 @@ resource "terraform_data" "deploy" {
   ]
 
   provisioner "local-exec" {
-    command = "cd ${var.dream_project_dir} && pnpm dlx wrangler pages publish --project-name ${cloudflare_pages_project.project.name} public"
+    command = "cd ${var.dream_project_dir} && npx wrangler pages deploy --project-name ${cloudflare_pages_project.project.name} public"
   }
 
   depends_on = [

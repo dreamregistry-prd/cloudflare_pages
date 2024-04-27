@@ -52,3 +52,8 @@ variable "build_script" {
   description = "npm script to run to build the project"
   default = "build"
 }
+
+variable "app_folder" {
+    description = "folder where the app is stored"
+    default = "app"
+}

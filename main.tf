@@ -89,17 +89,17 @@ data "archive_file" "functions_folder" {
   output_path = ".cloudflare_pages_functions.zip"
 }
 
-data "archive_file" "build_folder" {
-  output_path = ".cloudflare_pages_build.zip"
+data "archive_file" "app_folder" {
+  output_path = ".cloudflare_pages_app.zip"
   type        = "zip"
-  source_dir = "${var.dream_project_dir}/build"
+  source_dir = "${var.dream_project_dir}/${var.build_folder}"
 }
 
 resource "terraform_data" "deploy" {
   triggers_replace = [
     data.archive_file.public_folder.output_base64sha256,
     data.archive_file.functions_folder.output_base64sha256,
-    data.archive_file.build_folder.output_base64sha256,
+    data.archive_file.app_folder.output_base64sha256,
     var.kv_namespaces,
     var.dream_env,
   ]

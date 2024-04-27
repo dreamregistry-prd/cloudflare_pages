@@ -47,3 +47,8 @@ variable "build_folder" {
   description = "folder where the build artifacts are stored"
   default = "build"
 }
+
+variable "build_script" {
+  description = "npm script to run to build the project"
+  default = "build"
+}

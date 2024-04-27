@@ -105,7 +105,7 @@ resource "terraform_data" "deploy" {
   ]
 
   provisioner "local-exec" {
-    command = "cd ${var.dream_project_dir} && npx wrangler pages deploy --project-name ${cloudflare_pages_project.project.name}"
+    command = "cd ${var.dream_project_dir} && npm run ${var.build_script} && npx wrangler pages deploy --project-name ${cloudflare_pages_project.project.name}"
   }
 
   depends_on = [

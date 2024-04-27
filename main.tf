@@ -92,7 +92,7 @@ data "archive_file" "functions_folder" {
 data "archive_file" "app_folder" {
   output_path = ".cloudflare_pages_app.zip"
   type        = "zip"
-  source_dir = "${var.dream_project_dir}/${var.build_folder}"
+  source_dir = "${var.dream_project_dir}/${var.app_folder}"
 }
 
 resource "terraform_data" "deploy" {

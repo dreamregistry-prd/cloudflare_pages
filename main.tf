@@ -46,22 +46,10 @@ resource "cloudflare_pages_project" "project" {
   }
 }
 
-data "aws_route53_zone" "domain" {
-  name = var.root_domain
-}
-
-resource "aws_route53_record" "domain" {
-  zone_id = data.aws_route53_zone.domain.zone_id
-  name    = "${var.domain_name_prefix}.${data.aws_route53_zone.domain.name}"
-  type    = "CNAME"
-  ttl     = "300"
-  records = ["${cloudflare_pages_project.project.name}.pages.dev"]
-}
-
 resource "cloudflare_pages_domain" "custom_domain" {
   account_id   = var.cloudflare_account_id
   project_name = cloudflare_pages_project.project.name
-  domain       = aws_route53_record.domain.name
+  domain       = var.custom_domain
 }
 
 

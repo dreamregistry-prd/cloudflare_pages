@@ -50,10 +50,10 @@ data "cloudflare_zone" "domain" {
   name = var.custom_domain
 }
 
-resource "cloudflare_dns_record" "custom_domain" {
+resource "cloudflare_record" "custom_domain" {
   zone_id = data.cloudflare_zone.domain.id
   name    = "@"
-  value   = "${cloudflare_pages_project.project.name}.pages.dev"
+  content = "${cloudflare_pages_project.project.name}.pages.dev"
   type    = "CNAME"
   proxied = true
 }

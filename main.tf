@@ -46,6 +46,18 @@ resource "cloudflare_pages_project" "project" {
   }
 }
 
+data "cloudflare_zone" "domain" {
+  name = var.custom_domain
+}
+
+resource "cloudflare_dns_record" "custom_domain" {
+  zone_id = data.cloudflare_zone.domain.id
+  name    = "@"
+  value   = "${cloudflare_pages_project.project.name}.pages.dev"
+  type    = "CNAME"
+  proxied = true
+}
+
 resource "cloudflare_pages_domain" "custom_domain" {
   account_id   = var.cloudflare_account_id
   project_name = cloudflare_pages_project.project.name

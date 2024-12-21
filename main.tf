@@ -58,10 +58,25 @@ resource "cloudflare_record" "custom_domain" {
   proxied = true
 }
 
+
+resource "cloudflare_record" "custom_domain_www" {
+  zone_id = data.cloudflare_zone.domain.id
+  name    = "www"
+  content = "${cloudflare_pages_project.project.name}.pages.dev"
+  type    = "CNAME"
+  proxied = true
+}
+
 resource "cloudflare_pages_domain" "custom_domain" {
   account_id   = var.cloudflare_account_id
   project_name = cloudflare_pages_project.project.name
   domain       = var.custom_domain
+}
+
+resource "cloudflare_pages_domain" "custom_domain_www" {
+  account_id   = var.cloudflare_account_id
+  project_name = cloudflare_pages_project.project.name
+  domain       = "www.${var.custom_domain}"
 }
 
 

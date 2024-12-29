@@ -48,7 +48,7 @@ resource "random_pet" "project_name" {
 
 data "aws_ssm_parameter" "secrets_env" {
   for_each = local.secret_env
-  name     = each.value.key
+  name     = each.value
   with_decryption = true
 }
 

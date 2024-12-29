@@ -68,7 +68,8 @@ resource "cloudflare_pages_project" "project" {
   deployment_configs {
     preview {}
     production {
-      environment_variables = local.env
+      environment_variables = local.non_secret_env
+      secrets = local.decrypted_secret_env
       kv_namespaces = {
         for kv_namespace in toset(var.kv_namespaces) :
         kv_namespace => cloudflare_workers_kv_namespace.cache[kv_namespace].id

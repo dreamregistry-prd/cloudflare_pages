@@ -1,6 +1,6 @@
 variable "dream_env" {
   description = "dream app environment variables to set"
-  type        = map(string)
+  type        = any
   sensitive   = true
   default     = {}
 }

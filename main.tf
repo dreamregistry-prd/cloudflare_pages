@@ -24,6 +24,7 @@ terraform {
 provider "cloudflare" {}
 provider "random" {}
 provider "archive" {}
+provider "aws" {}
 
 locals {
   non_secret_env_temp = {

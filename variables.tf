@@ -1,7 +1,7 @@
 variable "dream_env" {
   description = "dream app environment variables to set"
   type        = any
-  sensitive   = true
+  sensitive   = false
   default     = {}
 }
 

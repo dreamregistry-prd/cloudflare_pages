@@ -25,10 +25,40 @@ provider "cloudflare" {}
 provider "random" {}
 provider "archive" {}
 
+locals {
+  non_secret_env_temp = {
+    for k, v in var.dream_env : k => try(tostring(v), null)
+  }
+  non_secret_env = {
+    for k, v in local.non_secret_env_temp : k => v if v != null && !startswith(k, "IAM_POLICY_")
+  }
+  secret_env_temp = {
+    for k, v in var.dream_env : k => try(tostring(v.key), null)
+  }
+  secret_env = {
+    for k, v in local.secret_env_temp : k => v if v != null
+  }
+
+}
+
 resource "random_pet" "project_name" {
   length = 3
   prefix = var.cloudflare_project_name_prefix
 }
+
+data "aws_ssm_parameter" "secrets_env" {
+  for_each = local.secret_env
+  name     = each.value.key
+  with_decryption = true
+}
+
+locals {
+  decrypted_secret_env = {
+    for k, v in data.aws_ssm_parameter.secrets_env : k => v.value
+  }
+  env = merge(local.non_secret_env, local.decrypted_secret_env)
+}
+
 
 resource "cloudflare_pages_project" "project" {
   account_id        = var.cloudflare_account_id
@@ -37,8 +67,8 @@ resource "cloudflare_pages_project" "project" {
   deployment_configs {
     preview {}
     production {
-      environment_variables = var.dream_env
-      kv_namespaces         = {
+      environment_variables = local.env
+      kv_namespaces = {
         for kv_namespace in toset(var.kv_namespaces) :
         kv_namespace => cloudflare_workers_kv_namespace.cache[kv_namespace].id
       }
@@ -107,7 +137,7 @@ data "archive_file" "functions_folder" {
 data "archive_file" "app_folder" {
   output_path = ".cloudflare_pages_app.zip"
   type        = "zip"
-  source_dir = "${var.dream_project_dir}/${var.app_folder}"
+  source_dir  = "${var.dream_project_dir}/${var.app_folder}"
 }
 
 resource "terraform_data" "deploy" {

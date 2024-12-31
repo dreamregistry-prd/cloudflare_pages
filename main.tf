@@ -31,7 +31,7 @@ locals {
     for k, v in var.dream_env : k => try(tostring(v), null)
   }
   non_secret_env = {
-    for k, v in local.non_secret_env_temp : k => v if v != null && !startswith(k, "IAM_POLICY_")
+    for k, v in local.non_secret_env_temp : k => v if v != null
   }
   secret_env_temp = {
     for k, v in var.dream_env : k => try(tostring(v.key), null)
@@ -79,8 +79,7 @@ resource "cloudflare_pages_project" "project" {
   deployment_configs {
     preview {}
     production {
-      environment_variables = local.non_secret_env
-      secrets               = local.decrypted_secret_env
+      secrets = merge(local.decrypted_secret_env, local.non_secret_env)
       kv_namespaces = {
         for kv_namespace in toset(var.kv_namespaces) :
         kv_namespace => cloudflare_workers_kv_namespace.cache[kv_namespace].id

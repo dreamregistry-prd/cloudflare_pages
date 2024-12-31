@@ -48,8 +48,8 @@ resource "random_pet" "project_name" {
 }
 
 data "aws_ssm_parameter" "secrets_env" {
-  for_each = local.secret_env
-  name     = each.value
+  for_each        = local.secret_env
+  name            = each.value
   with_decryption = true
 }
 
@@ -58,6 +58,17 @@ locals {
     for k, v in data.aws_ssm_parameter.secrets_env : k => v.value
   }
   env = merge(local.non_secret_env, local.decrypted_secret_env)
+}
+
+resource "random_pet" "d1_database_name" {
+  for_each = var.d1_databases
+  length   = 3
+}
+
+resource "cloudflare_d1_database" "d1_database" {
+  for_each   = var.d1_databases
+  account_id = var.cloudflare_account_id
+  name       = random_pet.d1_database_name[each.key].id
 }
 
 
@@ -69,10 +80,14 @@ resource "cloudflare_pages_project" "project" {
     preview {}
     production {
       environment_variables = local.non_secret_env
-      secrets = local.decrypted_secret_env
+      secrets               = local.decrypted_secret_env
       kv_namespaces = {
         for kv_namespace in toset(var.kv_namespaces) :
         kv_namespace => cloudflare_workers_kv_namespace.cache[kv_namespace].id
+      }
+      d1_databases = {
+        for key, value in var.d1_databases :
+        key => cloudflare_d1_database.d1_database[key].id
       }
     }
   }

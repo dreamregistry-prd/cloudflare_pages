@@ -10,6 +10,12 @@ variable "dream_project_dir" {
   type        = string
 }
 
+variable "d1_databases" {
+  description = "d1 database name"
+  type        = set(string)
+  default     = []
+}
+
 variable "kv_namespaces" {
   description = "list of kv namespaces binding variables to create"
   type        = list(string)
@@ -40,10 +46,10 @@ variable "custom_domain" {
 
 variable "build_script" {
   description = "npm script to run to build the project"
-  default = "build"
+  default     = "build"
 }
 
 variable "app_folder" {
-    description = "folder where the app is stored"
-    default = "app"
+  description = "folder where the app is stored"
+  default     = "app"
 }
